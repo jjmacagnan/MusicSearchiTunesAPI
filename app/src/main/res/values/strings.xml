@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Music Search iTunes API</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <string name="artwork">artwork</string>
+    <string name="search">Search</string>
+    <string name="artwork_detail">Artwork Detail</string>
+    <string name="salvar">Salvar</string>
+    <string name="descartar">Descartar</string>
+    <string name="nao_gosto">Não gosto</string>
+    <string name="gosto">Gosto</string>
+    <string name="nao_conectado">Não há conexão com a internet</string>
+    <string name="conectado">Conectado</string>
+    <string name="search_songs">Search for Songs</string>
+</resources>
