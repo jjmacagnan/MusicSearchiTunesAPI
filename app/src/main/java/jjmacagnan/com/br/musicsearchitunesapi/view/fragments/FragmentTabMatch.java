@@ -114,7 +114,7 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
             super.onPostExecute(s);
 
             for (Track track : dataTracks) {
-                mSwipeView.addView(new MusicCard(getContext(), track, mSwipeView));
+                mSwipeView.addView(new MusicCard(getContext(), track));
             }
         }
     }

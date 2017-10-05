@@ -36,12 +36,10 @@ public class MusicCard {
 
     private Track mTrack;
     private Context mContext;
-    private SwipePlaceHolderView mSwipeView;
 
-    public MusicCard(Context context, Track track, SwipePlaceHolderView swipeView) {
+    public MusicCard(Context context, Track track) {
         mContext = context;
         mTrack = track;
-        mSwipeView = swipeView;
     }
 
     @Resolve
@@ -54,27 +52,22 @@ public class MusicCard {
 
     @SwipeOut
     private void onSwipedOut() {
-        mSwipeView.addView(this);
     }
 
     @SwipeCancelState
     private void onSwipeCancelState() {
-        Log.d("EVENT", "onSwipeCancelState");
     }
 
     @SwipeIn
     private void onSwipeIn() {
-        Log.d("EVENT", "onSwipedIn");
     }
 
     @SwipeInState
     private void onSwipeInState() {
-
     }
 
     @SwipeOutState
     private void onSwipeOutState() {
-
     }
 
 }
