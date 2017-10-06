@@ -3,6 +3,7 @@ package jjmacagnan.com.br.musicsearchitunesapi.view;
 import android.app.SearchManager;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+
 import jjmacagnan.com.br.musicsearchitunesapi.R;
 import jjmacagnan.com.br.musicsearchitunesapi.util.NetworkStateReceiver;
 import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabGostei;
@@ -65,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.search, menu);
         final SearchView searchView = (SearchView) MenuItemCompat.getActionView(menu.findItem(R.id.action_search));
         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
@@ -74,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                Snackbar.make(mTabLayout, R.string.perquisando, Snackbar.LENGTH_LONG).show();
+
                 mFragmentTabMatch.search(query);
 
                 TabLayout.Tab tab = mTabLayout.getTabAt(0);

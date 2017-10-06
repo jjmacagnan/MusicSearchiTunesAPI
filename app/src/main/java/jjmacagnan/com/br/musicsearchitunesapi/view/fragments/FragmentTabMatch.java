@@ -1,6 +1,5 @@
 package jjmacagnan.com.br.musicsearchitunesapi.view.fragments;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -29,8 +28,6 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
     private static Queue<Track> mQueueDataTracks;
     private MusicListPresenter mPresenter;
     private long mLastClickTime = 0;
-    @SuppressWarnings("deprecation")
-    private ProgressDialog mDialog;
 
     public FragmentTabMatch() {
         mPresenter = new MusicListPresenter(this);
@@ -86,7 +83,6 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
     }
 
     public static Queue<Track> getQueueDataTracks() {
-
         return mQueueDataTracks;
     }
 
@@ -94,8 +90,6 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
     public void displayMessage(String message) {
         if (getView() != null)
             Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
-
-        mDialog.dismiss();
     }
 
     @Override
@@ -109,12 +103,7 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
         new MusicLoadList().execute();
     }
 
-
-    @SuppressWarnings("deprecation")
     public void search(final String strTerm) {
-        mDialog = ProgressDialog.show(getActivity(), "",
-                getString(R.string.carregando), true);
-
         if (mQueueDataTracks != null)
             mQueueDataTracks.clear();
 
@@ -135,8 +124,6 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
             for (Track track : mQueueDataTracks) {
                 mSwipeView.addView(new MusicCard(getContext(), track));
             }
-
-            mDialog.dismiss();
         }
     }
 }

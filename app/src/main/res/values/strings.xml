@@ -13,5 +13,5 @@
     <string name="conectado">Conectado</string>
     <string name="search_songs">Pesquise por Músicas</string>
     <string name="falha_informacao">Problema ao reproduzir música, Tente novamente.</string>
-    <string name="carregando">Carregando. Por favor aguarde...</string>
+    <string name="perquisando">Pesquisando. Por favor aguarde!</string>
 </resources>
