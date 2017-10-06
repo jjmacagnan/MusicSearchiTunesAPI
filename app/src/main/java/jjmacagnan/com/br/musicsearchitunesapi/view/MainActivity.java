@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-
 import jjmacagnan.com.br.musicsearchitunesapi.R;
 import jjmacagnan.com.br.musicsearchitunesapi.util.NetworkStateReceiver;
 import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabGostei;
@@ -22,16 +21,17 @@ import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabMatch;
 
 public class MainActivity extends AppCompatActivity {
 
-    private FragmentTabMatch tabMatch;
-    private FragmentTabGostei tabGostei;
-    private NetworkStateReceiver stateReceiver;
+    private FragmentTabMatch mFragmentTabMatch;
+    private FragmentTabGostei mFragmentTabGostei;
+    private NetworkStateReceiver mStateReceiver;
+    private TabLayout mTabLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        stateReceiver = new NetworkStateReceiver();
+        mStateReceiver = new NetworkStateReceiver();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,15 +40,15 @@ public class MainActivity extends AppCompatActivity {
         ViewPager mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(mViewPager);
+        mTabLayout = (TabLayout) findViewById(R.id.tabs);
+        mTabLayout.setupWithViewPager(mViewPager);
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
 
-                if (tab.getText() == "GOSTEI") {
-                    tabGostei.displayTracks();
+                if (mTabLayout.getTabAt(1).isSelected()) {
+                    mFragmentTabGostei.displayTracks();
                 }
             }
 
@@ -74,7 +74,12 @@ public class MainActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                tabMatch.search(query);
+                mFragmentTabMatch.search(query);
+
+                TabLayout.Tab tab = mTabLayout.getTabAt(0);
+                if (tab != null) {
+                    tab.select();
+                }
                 return false;
             }
 
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         return true;
     }
 
@@ -96,11 +102,11 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             switch (position) {
                 case 0:
-                    tabMatch = new FragmentTabMatch();
-                    return tabMatch;
+                    mFragmentTabMatch = new FragmentTabMatch();
+                    return mFragmentTabMatch;
                 case 1:
-                    tabGostei = new FragmentTabGostei();
-                    return tabGostei;
+                    mFragmentTabGostei = new FragmentTabGostei();
+                    return mFragmentTabGostei;
                 default:
                     return null;
             }
@@ -128,12 +134,12 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(stateReceiver, filter);
+        registerReceiver(mStateReceiver, filter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        unregisterReceiver(stateReceiver);
+        unregisterReceiver(mStateReceiver);
     }
 }

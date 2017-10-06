@@ -13,7 +13,7 @@ public class TrackModel {
     private Integer resultCount;
     @SerializedName("results")
     @Expose
-    private List<Track> tracks = null;
+    private List<Track> musics = null;
 
     public Integer getResultCount() {
         return resultCount;
@@ -24,10 +24,10 @@ public class TrackModel {
     }
 
     public List<Track> getTracks() {
-        return tracks;
+        return musics;
     }
 
-    public void setTracks(List<Track> tracks) {
-        this.tracks = tracks;
+    public void setTracks(List<Track> musics) {
+        this.musics = musics;
     }
 }

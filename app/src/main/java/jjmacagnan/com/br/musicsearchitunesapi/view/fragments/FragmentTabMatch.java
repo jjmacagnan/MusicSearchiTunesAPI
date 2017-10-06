@@ -1,13 +1,14 @@
 package jjmacagnan.com.br.musicsearchitunesapi.view.fragments;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.mindorks.placeholderview.SwipeDecor;
 import com.mindorks.placeholderview.SwipePlaceHolderView;
@@ -25,20 +26,20 @@ import jjmacagnan.com.br.musicsearchitunesapi.view.musiclist.MusicListPresenter;
 public class FragmentTabMatch extends Fragment implements MusicListContract.View {
 
     private SwipePlaceHolderView mSwipeView;
-    private static Queue<Track> dataTracks;
-    private MusicListPresenter presenter;
-    private FrameLayout frameLayout;
+    private static Queue<Track> mQueueDataTracks;
+    private MusicListPresenter mPresenter;
+    private long mLastClickTime = 0;
+    @SuppressWarnings("deprecation")
+    private ProgressDialog mDialog;
 
     public FragmentTabMatch() {
-        presenter = new MusicListPresenter(this);
+        mPresenter = new MusicListPresenter(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_match, container, false);
-
-        frameLayout = rootView.findViewById(R.id.framelayout_match);
 
         mSwipeView = rootView.findViewById(R.id.swipeView);
 
@@ -50,59 +51,77 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
                         .setSwipeInMsgLayoutId(R.layout.music_swipe_in_msg_view)
                         .setSwipeOutMsgLayoutId(R.layout.music_swipe_out_msg_view));
 
-        mSwipeView.disableTouchSwipe();
         rootView.findViewById(R.id.rejectBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSwipeView.doSwipe(false);
-                dataTracks.poll();
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                    return;
+                } else {
+                    if (mQueueDataTracks.size() > 0) {
+                        mSwipeView.doSwipe(false);
+                        mQueueDataTracks.poll();
+                    }
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
             }
         });
+
 
         rootView.findViewById(R.id.acceptBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSwipeView.doSwipe(true);
-                FragmentTabGostei.dataTracks.add(dataTracks.poll());
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                    return;
+                } else {
+                    if (mQueueDataTracks.size() > 0) {
+                        mSwipeView.doSwipe(true);
+                        FragmentTabGostei.getListDataTracks().add(mQueueDataTracks.poll());
+                    }
+                }
+                mLastClickTime = SystemClock.elapsedRealtime();
             }
         });
 
         return rootView;
     }
 
+    public static Queue<Track> getQueueDataTracks() {
+
+        return mQueueDataTracks;
+    }
+
     @Override
     public void displayMessage(String message) {
         if (getView() != null)
             Snackbar.make(getView(), message, Snackbar.LENGTH_LONG).show();
+
+        mDialog.dismiss();
     }
 
     @Override
     public void displayTracks(List<Track> dataTrack) {
-        if (dataTracks == null)
-            dataTracks = new ArrayDeque<>();
+        if (mQueueDataTracks == null)
+            mQueueDataTracks = new ArrayDeque<>();
 
-        dataTracks.clear();
-        dataTracks.addAll(dataTrack);
+        mQueueDataTracks.clear();
+        mQueueDataTracks.addAll(dataTrack);
         mSwipeView.removeAllViews();
         new MusicLoadList().execute();
     }
 
 
+    @SuppressWarnings("deprecation")
     public void search(final String strTerm) {
-        if (dataTracks != null)
-            dataTracks.clear();
+        mDialog = ProgressDialog.show(getActivity(), "",
+                getString(R.string.carregando), true);
 
-        frameLayout.setVisibility(View.VISIBLE);
-        presenter.getTracks(strTerm);
+        if (mQueueDataTracks != null)
+            mQueueDataTracks.clear();
+
+        mPresenter.getTracks(strTerm);
     }
 
-
     private class MusicLoadList extends AsyncTask<String, String, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
         @Override
         protected String doInBackground(String... strings) {
@@ -113,9 +132,11 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
 
-            for (Track track : dataTracks) {
+            for (Track track : mQueueDataTracks) {
                 mSwipeView.addView(new MusicCard(getContext(), track));
             }
+
+            mDialog.dismiss();
         }
     }
 }

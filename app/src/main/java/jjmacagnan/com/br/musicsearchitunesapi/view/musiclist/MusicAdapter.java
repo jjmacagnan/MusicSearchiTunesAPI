@@ -59,7 +59,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Track track = trackList.get(position);
 
-        final String artworkUrl = track.getArtworkUrl100();
+        String artworkUrl = track.getArtworkUrl100();
         Glide.with(context).load(artworkUrl).placeholder(R.drawable.ic_logo).into(holder.imgTrackArtwork);
 
         holder.txtTrackName.setText(track.getTrackName());

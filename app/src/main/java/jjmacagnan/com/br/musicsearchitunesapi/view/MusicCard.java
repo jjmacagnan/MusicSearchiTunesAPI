@@ -2,23 +2,19 @@ package jjmacagnan.com.br.musicsearchitunesapi.view;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.mindorks.placeholderview.SwipePlaceHolderView;
 import com.mindorks.placeholderview.annotations.Layout;
 import com.mindorks.placeholderview.annotations.Resolve;
 import com.mindorks.placeholderview.annotations.View;
-import com.mindorks.placeholderview.annotations.swipe.SwipeCancelState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeIn;
-import com.mindorks.placeholderview.annotations.swipe.SwipeInState;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOut;
-import com.mindorks.placeholderview.annotations.swipe.SwipeOutState;
+import com.mindorks.placeholderview.annotations.swipe.SwipeInDirectional;
+import com.mindorks.placeholderview.annotations.swipe.SwipeOutDirectional;
 
 import jjmacagnan.com.br.musicsearchitunesapi.R;
 import jjmacagnan.com.br.musicsearchitunesapi.api.model.Track;
+import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabGostei;
 import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabMatch;
 
 
@@ -26,13 +22,13 @@ import jjmacagnan.com.br.musicsearchitunesapi.view.fragments.FragmentTabMatch;
 public class MusicCard {
 
     @View(R.id.imgArtworkDetail)
-    private ImageView imgArtwork;
+    private ImageView mImgArtwork;
 
     @View(R.id.artist_name)
-    private TextView artistNameTxt;
+    private TextView mArtistNameTxt;
 
     @View(R.id.track_name)
-    private TextView trackNameTxt;
+    private TextView mTrackNameTxt;
 
     private Track mTrack;
     private Context mContext;
@@ -45,29 +41,19 @@ public class MusicCard {
     @Resolve
     private void onResolved() {
         String artworkUrl = mTrack.getArtworkUrl100();
-        Glide.with(mContext).load(artworkUrl).placeholder(R.drawable.ic_logo).into(imgArtwork);
-        artistNameTxt.setText(mTrack.getArtistName());
-        trackNameTxt.setText(mTrack.getTrackName());
+        Glide.with(mContext).load(artworkUrl).placeholder(R.drawable.ic_logo).into(mImgArtwork);
+        mArtistNameTxt.setText(mTrack.getArtistName());
+        mTrackNameTxt.setText(mTrack.getTrackName());
     }
 
-    @SwipeOut
-    private void onSwipedOut() {
+    @SwipeInDirectional
+    public void onSwipeInDirectional() {
+        FragmentTabGostei.getListDataTracks().add(FragmentTabMatch.getQueueDataTracks().poll());
     }
 
-    @SwipeCancelState
-    private void onSwipeCancelState() {
-    }
-
-    @SwipeIn
-    private void onSwipeIn() {
-    }
-
-    @SwipeInState
-    private void onSwipeInState() {
-    }
-
-    @SwipeOutState
-    private void onSwipeOutState() {
+    @SwipeOutDirectional
+    public void onSwipeOutDirectional() {
+        FragmentTabMatch.getQueueDataTracks().poll();
     }
 
 }

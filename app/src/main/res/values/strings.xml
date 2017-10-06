@@ -11,5 +11,7 @@
     <string name="gosto">Gosto</string>
     <string name="nao_conectado">Não há conexão com a internet</string>
     <string name="conectado">Conectado</string>
-    <string name="search_songs">Search for Songs</string>
+    <string name="search_songs">Pesquise por Músicas</string>
+    <string name="falha_informacao">Problema ao reproduzir música, Tente novamente.</string>
+    <string name="carregando">Carregando. Por favor aguarde...</string>
 </resources>
