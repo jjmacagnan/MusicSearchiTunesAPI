@@ -54,7 +54,7 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
                     return;
                 } else {
-                    if (mQueueDataTracks.size() > 0) {
+                    if (mQueueDataTracks != null && mQueueDataTracks.size() > 0) {
                         mSwipeView.doSwipe(false);
                         mQueueDataTracks.poll();
                     }
@@ -70,7 +70,7 @@ public class FragmentTabMatch extends Fragment implements MusicListContract.View
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
                     return;
                 } else {
-                    if (mQueueDataTracks.size() > 0) {
+                    if (mQueueDataTracks != null && mQueueDataTracks.size() > 0) {
                         mSwipeView.doSwipe(true);
                         FragmentTabGostei.getListDataTracks().add(mQueueDataTracks.poll());
                     }
